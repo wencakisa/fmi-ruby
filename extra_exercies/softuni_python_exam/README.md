@@ -1,0 +1,1 @@
+## Here I will write to solutions for [SoftUni Python Exam (21.08.2016)](https://judge.softuni.bg/Contests/273/Python-Programming-Exam-21-August-2016), but written in *Ruby*.
