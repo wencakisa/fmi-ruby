@@ -1,64 +1,44 @@
-CELSIUS_SIGN = 'C'
-FAHRENHEIT_SIGN = 'F'
-KELVIN_SIGN = 'K'
-
-TEMP_UNITS = {
-    CELSIUS_SIGN => {
-        FAHRENHEIT_SIGN => 32.8,
-        KELVIN_SIGN => 273.15
-    },
-    FAHRENHEIT_SIGN => {
-        CELSIUS_SIGN => -17.22,
-        KELVIN_SIGN => 255.927778
-    },
-    KELVIN_SIGN => {
-        CELSIUS_SIGN => -272.15,
-        FAHRENHEIT_SIGN => -457.87
-    }
+SUBSTANCES = {
+    :water => { melting_point: 0, boiling_point: 100 },
+    :ethanol => { melting_point: -114.1, boiling_point: 78.37 },
+    :gold => { melting_point: 1064, boiling_point: 2700 },
+    :silver => { melting_point: 961.8, boiling_point: 2162 },
+    :copper => { melting_point: 1085, boiling_point: 2567 }
 }
 
-SUBSTANCES = %w[ water ethanol gold silver copper ]
-
-CELSIUS_MELTING_POINTS = {
-    SUBSTANCES[0] => 0,
-    SUBSTANCES[1] => -114.1,
-    SUBSTANCES[2] => 1064,
-    SUBSTANCES[3] => 961.8,
-    SUBSTANCES[4] => 1085
-}
-
-CELSIUS_BOILING_POINTS = {
-    SUBSTANCES[0] => 100,
-    SUBSTANCES[1] => 78.37,
-    SUBSTANCES[2] => 2700,
-    SUBSTANCES[3] => 2162,
-    SUBSTANCES[4] => 2567
-}
-
-def convert_between_temp_units(degrees, default_temp_unit, result_temp_unit)
-  degrees + TEMP_UNITS[default_temp_unit][result_temp_unit]
+def degrees_to_celsius(degrees, temp_unit)
+  case temp_unit
+    when 'F' then (degrees - 32) / 1.8
+    when 'K' then degrees - 273.15
+    else degrees
+  end
 end
 
-def point_of_substance(substance, temp_unit, celsius_temp_hash)
-  celsius_point = celsius_temp_hash[substance]
-
-  unless temp_unit == CELSIUS_SIGN
-    return convert_between_temp_units(celsius_point, CELSIUS_SIGN, temp_unit)
+def degrees_from_celsius(degrees, temp_unit)
+  case temp_unit
+    when 'F' then degrees * 1.8 + 32
+    when 'K' then degrees + 273.15
+    else degrees
   end
+end
 
-  celsius_point
+def convert_between_temp_units(degrees, from_unit, to_unit)
+  degrees_in_celsius = degrees_to_celsius(degrees, from_unit)
+
+  degrees_from_celsius(degrees_in_celsius, to_unit)
 end
 
 def melting_point_of_substance(substance, temp_unit)
-  point_of_substance(substance, temp_unit, CELSIUS_MELTING_POINTS)
+  degrees_from_celsius(SUBSTANCES[substance.to_sym][:melting_point], temp_unit)
 end
 
 def boiling_point_of_substance(substance, temp_unit)
-  point_of_substance(substance, temp_unit, CELSIUS_BOILING_POINTS)
+  degrees_from_celsius(SUBSTANCES[substance.to_sym][:boiling_point], temp_unit)
 end
 
 puts melting_point_of_substance('water', 'C')
 puts melting_point_of_substance('water', 'K')
+puts melting_point_of_substance('gold', 'C')
 puts boiling_point_of_substance('water', 'C')
 puts boiling_point_of_substance('ethanol', 'F')
 puts boiling_point_of_substance('copper', 'K')
