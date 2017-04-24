@@ -51,3 +51,6 @@ build-iPhoneSimulator/
 
 # RubyMine cache folder
 .idea/
+
+# RuboCop configuration file
+.rubocop.yml
